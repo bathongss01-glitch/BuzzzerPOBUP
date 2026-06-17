@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUZZERS - Cửa Hàng Thiệp POP UP</title>
+    <script src="https://cdn.tailwindcss.com">
+
+
+
+
+
+
+// AI FINDER
+
+function openAIFinder() {
+
+    document.getElementById("aiModal").style.display = "flex";
+
+}
+
+function closeAIFinder() {
+
+    document.getElementById("aiModal").style.display = "none";
+
+}
+
+
+
+function searchBooks() {
+
+    const keyword = document
+        .getElementById("aiInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const results = document.getElementById("aiResults");
+
+    results.innerHTML = "";
+
+    let recommendations = [];
+
+    if(keyword.includes("khoa học") || keyword.includes("vũ trụ")) {
+
+        recommendations.push({
+            title: "UPCOMING",
+            desc: "Phù hợp nếu bạn thích khoa học và khám phá.",
+            image: "https://placehold.co/600x800?text=UPCOMING",
+            rating: "",
+            reviews: "",
+            price: "",
+            cartName: "Vũ Trụ Song Song",
+            cartPrice: 320000
+        });
+
+    }
+
+    if(keyword.includes("startup") || keyword.includes("kinh doanh")) {
+
+        recommendations.push({
+            title: "UPCOMING",
+            desc: "Dành cho người muốn học kinh doanh hiện đại.",
+            image: "https://placehold.co/600x800?text=UPCOMING",
+            rating: "",
+            reviews: "",
+            price: "",
+            cartName: "Startup 4.0",
+            cartPrice: 199000
+        });
+
+    }
+
+    if(keyword.includes("ai") || keyword.includes("công nghệ")) {
+
+        recommendations.push({
+            title: "Hà Nội: Dấu Ấn Ngàn Năm",
+            desc: "Khám phá tương lai AI và công nghệ.",
+            image: "hanoi_product_cover.jpg",
+            rating: "",
+            reviews: "(128 đánh giá)",
+            price: "60.000đ",
+            cartName: "Hà Nội: Dấu Ấn Ngàn Năm",
+            cartPrice: 60000
+        });
+
+    }
+
+    if(keyword.includes("tư duy") || keyword.includes("chữa lành")) {
+
+        recommendations.push({
+            title: "UPCOMING",
+            desc: "Một cuốn sách nhẹ nhàng về tư duy sống.",
+            image: "https://placehold.co/600x800?text=UPCOMING",
+            rating: "",
+            reviews: "",
+            price: "",
+            cartName: "Thiết Kế Cuộc Đời",
+            cartPrice: 185000
+        });
+
+    }
+
+    if(recommendations.length === 0) {
+
+        results.innerHTML = `
+            <div class="glass p-8 rounded-3xl text-center col-span-full">
+
+                <h3 class="text-2xl font-bold mb-4">
+                    Hiện tại chưa có mẫu thiệp phù hợp 📚
+                </h3>
+
+                <p class="text-slate-400">
+                    Chúng tôi sẽ cập nhật thêm sách trong thời gian tới.
+                </p>
+
+            </div>
+        `;
+
+        return;
+
+    }
+
+    recommendations.forEach(book => {
+
+        results.innerHTML += `
+            <div class="glass p-6 rounded-3xl flex flex-col">
+
+                <img 
+                    src="${book.image}"
+                    class="w-full h-[280px] object-cover rounded-2xl mb-5"
+                >
+
+                <h3 class="text-2xl font-bold mb-3">
+                    ${book.title}
+                </h3>
+
+                <p class="text-slate-400 mb-4">
+                    ${book.desc}
+                </p>
+
+                <div class="flex items-center gap-2 text-yellow-500 mb-4">
+                    <span>${book.rating}</span>
+                    <span class="text-slate-400 text-sm">
+                        ${book.reviews}
+                    </span>
+                </div>
+
+                <div class="mt-auto flex items-center justify-between">
+
+                    <span class="text-2xl font-bold">
+                        ${book.price}
+                    </span>
+
+                    <button 
+                        onclick="addToCart('${book.cartName}', ${book.cartPrice})"
+                        class="bg-blue-600 hover:bg-blue-500 px-5 py-3 rounded-2xl font-bold transition-all">
+                        Mua hàng
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+    });
+
+}
+
+
+
+
+
+// ENTER KEY SEARCH
+document.addEventListener("DOMContentLoaded", () => {
+
+    const aiInput = document.getElementById("aiInput");
+
+    if(aiInput) {
+
+        aiInput.addEventListener("keypress", function(e) {
+
+            if(e.key === "Enter") {
+                searchBooks();
+            }
+
+        });
+
+    }
+
+});
+
+</script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f8fafc; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .text-gradient { background: linear-gradient(to right, #60a5fa, #a78bfa, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .book-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .book-card:hover { transform: translateY(-10px) scale(1.02); border-color: rgba(96, 165, 250, 0.5); }
+        .cart-badge { position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; }
+    
+
+/* Premium minimal scrollbar */
+#hanoiModal .overflow-auto{
+    scrollbar-width: thin;
+    scrollbar-color: rgba(96,165,250,.7) transparent;
+}
+
+#hanoiModal .overflow-auto::-webkit-scrollbar{
+    width: 6px;
+}
+
+#hanoiModal .overflow-auto::-webkit-scrollbar-button{
+    display:none;
+    width:0;
+    height:0;
+}
+
+#hanoiModal .overflow-auto::-webkit-scrollbar-track{
+    background: transparent;
+}
+
+#hanoiModal .overflow-auto::-webkit-scrollbar-thumb{
+    min-height: 60px;
+    background: linear-gradient(
+        180deg,
+        rgba(191,219,254,.8),
+        rgba(96,165,250,.7),
+        rgba(59,130,246,.8)
+    );
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.08);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 0 10px rgba(59,130,246,.15);
+}
+
+#hanoiModal .overflow-auto::-webkit-scrollbar-thumb:hover{
+    background: linear-gradient(
+        180deg,
+        rgba(219,234,254,.95),
+        rgba(96,165,250,.9)
+    );
+}
+
+
+
+/* Neon scrollbar for Hanoi modal */
+#hanoiModal .overflow-auto{
+    scrollbar-width: thin;
+    scrollbar-color: #3B82F6 rgba(255,255,255,0.05);
+}
+
+#hanoiModal .overflow-auto::-webkit-scrollbar{
+    width: 10px;
+}
+
+#hanoiModal .overflow-auto::-webkit-scrollbar-track{
+    background: rgba(255,255,255,0.04);
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
+}
+
+#hanoiModal .overflow-auto::-webkit-scrollbar-thumb{
+    background: linear-gradient(180deg,#60A5FA,#3B82F6);
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 0 12px rgba(59,130,246,.8);
+}
+
+#hanoiModal .overflow-auto::-webkit-scrollbar-thumb:hover{
+    box-shadow: 0 0 18px rgba(96,165,250,1);
+}
+
+</style>
+
+<style>
+#hanoiModal .overflow-auto::-webkit-scrollbar,
+#hanoiModal div::-webkit-scrollbar{
+    width:6px !important;
+}
+#hanoiModal .overflow-auto::-webkit-scrollbar-button,
+#hanoiModal div::-webkit-scrollbar-button{
+    width:0 !important;
+    height:0 !important;
+    display:none !important;
+}
+#hanoiModal .overflow-auto::-webkit-scrollbar-track,
+#hanoiModal div::-webkit-scrollbar-track{
+    background:transparent !important;
+}
+#hanoiModal .overflow-auto::-webkit-scrollbar-thumb,
+#hanoiModal div::-webkit-scrollbar-thumb{
+    border-radius:999px !important;
+    background:linear-gradient(180deg,#93c5fd,#60a5fa,#3b82f6) !important;
+}
+</style>
+
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center glass rounded-2xl px-6 py-3">
+            
+<div style="font-weight:500; letter-spacing:2px; font-size:2rem; text-transform:uppercase;">
+<span style="color:white;">BUZZ</span><span style="color:#3B82F6;">ERS</span>
+</div>
+
+            
+            <div class="hidden md:flex flex-1 max-w-md mx-10">
+                <div class="relative w-full">
+                    <input type="text" id="searchInput" placeholder="Tìm tên thiệp..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-blue-500 transition-all">
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-6">
+                <div class="hidden md:flex space-x-6 text-sm font-medium opacity-70">
+                    <a href="#" class="hover:text-blue-400">Cửa hàng</a>
+                    <a href="#" class="hover:text-blue-400">Best Seller</a>
+                </div>
+                <div onclick="openCart()" class="relative cursor-pointer hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    <span id="cartCount" class="cart-badge">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-12 px-6">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-600/10 blur-[120px] rounded-full -z-10"></div>
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl md:text-6xl font-extrabold tracking-tighter mb-4">HÀ NỘI: <br><span class="text-gradient">DẤU ẤN NGÀN NĂM</span></h2><p class="text-slate-400 text-lg">Thiệp Pop-up lấy cảm hứng từ những biểu tượng văn hóa của Thủ đô Hà Nội. Giá bán: <b>60.000đ</b>.</p>
+        </div>
+    </section>
+
+    <!-- Product Grid -->
+    <section class="max-w-7xl mx-auto px-6 py-10">
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            
+            <!-- Book Item 1 -->
+            <div onclick="openHanoiModal()" class="book-card product glass p-4 rounded-[2rem] flex flex-col cursor-pointer" data-name="Hà Nội: Dấu Ấn Ngàn Năm">
+                <div class="relative group overflow-hidden rounded-2xl mb-4 aspect-[3/4]">
+                    <img src="hanoi_product_cover.jpg" alt="Book Cover" class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute top-3 right-3 bg-blue-600 text-[10px] font-bold px-2 py-1 rounded-lg uppercase">Bán chạy</div>
+                </div>
+                <div class="flex-1">
+                    
+                    <h3 class="text-lg font-bold mt-1 leading-tight">Hà Nội: Dấu Ấn Ngàn Năm</h3>
+                    <p class="text-slate-500 text-sm mt-2 italic">Tác giả: Buzzers</p>
+                    <div class="flex items-center mt-3 space-x-1 text-yellow-500">
+                        <span></span>
+                        <span class="text-slate-400 text-xs ml-2">(128 đánh giá)</span>
+                    </div>
+                </div>
+                <div class="mt-6 flex items-center justify-between">
+                    <div>
+                        <span class="text-xl font-bold text-white">60.000đ</span>
+                        
+                    </div>
+                    <button onclick="event.stopPropagation(); addToCart('Hà Nội: Dấu Ấn Ngàn Năm',60000)" class="bg-white/10 hover:bg-blue-600 p-3 rounded-xl transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            
+        </div>
+    </section>
+
+
+    
+<section class="max-w-7xl mx-auto px-6 py-24">
+<div class="glass p-10 rounded-[3rem]">
+<h2 class="text-4xl font-bold mb-6">Khám phá Hà Nội qua từng lớp giấy</h2>
+<p class="text-slate-400 text-lg leading-relaxed">
+Hà Nội không chỉ là thủ đô của Việt Nam mà còn là nơi lưu giữ những giá trị lịch sử, văn hóa và ký ức của nhiều thế hệ.
+Từ những con phố cổ rêu phong, mặt hồ yên bình cho đến các công trình mang dấu ấn thời gian, Hà Nội luôn để lại trong lòng người dân và du khách những cảm xúc rất riêng.
+<br><br>
+Lấy cảm hứng từ vẻ đẹp ấy, Buzzers đã phát triển mẫu thiệp pop-up "Hà Nội: Dấu Ấn Ngàn Năm" với mong muốn tái hiện một phần tinh thần của Thủ đô thông qua nghệ thuật giấy.
+Khi mở thiệp, các lớp giấy được sắp xếp theo cơ chế pop-up sẽ dần hiện ra, tạo nên hiệu ứng không gian ba chiều sống động và đầy bất ngờ.
+<br><br>
+Đây không chỉ là một tấm thiệp lưu niệm mà còn là cách để lưu giữ những hình ảnh biểu tượng của Hà Nội trong một hình thức sáng tạo và gần gũi.
+</p>
+</div>
+</section>
+
+<section class="max-w-7xl mx-auto px-6 py-10">
+<h2 class="text-4xl font-bold text-center mb-12">Điểm nổi bật</h2>
+<div class="grid md:grid-cols-3 gap-8">
+<div class="glass p-8 rounded-3xl"><h3 class="text-xl font-bold mb-4">Thiết kế thủ công</h3><p class="text-slate-400">Thiệp được thiết kế dựa trên những biểu tượng quen thuộc của Hà Nội. Từng lớp giấy, màu sắc và bố cục đều được cân nhắc để tạo nên một sản phẩm mang đậm bản sắc văn hóa Thủ đô.</p></div>
+<div class="glass p-8 rounded-3xl"><h3 class="text-xl font-bold mb-4">Cơ chế Pop-up</h3><p class="text-slate-400">Cấu trúc pop-up cho phép các chi tiết tự động dựng lên khi mở thiệp, tạo cảm giác như một mô hình thu nhỏ xuất hiện ngay trước mắt người xem.</p></div>
+<div class="glass p-8 rounded-3xl"><h3 class="text-xl font-bold mb-4">Quà tặng ý nghĩa</h3><p class="text-slate-400">Sản phẩm phù hợp làm quà tặng cho bạn bè, du khách hoặc những người yêu thích vẻ đẹp và văn hóa của Hà Nội. Nhỏ gọn, dễ bảo quản nhưng vẫn mang giá trị lưu niệm cao.</p></div>
+</div>
+</section>
+
+<section class="max-w-7xl mx-auto px-6 py-24">
+<div class="glass p-10 rounded-[3rem]">
+<h2 class="text-4xl font-bold mb-6">Hà Nội trong từng chi tiết</h2>
+<p class="text-slate-400 text-lg leading-relaxed">
+Mỗi chi tiết trên thiệp đều được lựa chọn dựa trên những hình ảnh quen thuộc gắn liền với Hà Nội.
+Từ màu sắc, bố cục cho đến cách sắp xếp các lớp giấy, tất cả đều hướng tới việc truyền tải nét đẹp vừa cổ kính vừa hiện đại của thành phố ngàn năm văn hiến.
+<br><br>
+Sản phẩm được tạo ra với mong muốn mang đến cho người xem cảm giác khám phá khi từng lớp giấy mở ra, giống như hành trình dạo bước qua những góc phố và công trình mang đậm dấu ấn lịch sử của Thủ đô.
+</p>
+</div>
+</section>
+
+
+
+
+<section class="max-w-7xl mx-auto px-6 py-20">
+<h2 class="text-4xl font-bold text-center mb-12">Hình ảnh sản phẩm</h2>
+<div class="grid md:grid-cols-3 gap-6">
+<div class="glass p-3 rounded-3xl"><img src="IMG_20260617_204438.jpg" class="w-full rounded-2xl"></div>
+<div class="glass p-3 rounded-3xl"><img src="IMG_20260617_204440.jpg" class="w-full rounded-2xl"></div>
+<div class="glass p-3 rounded-3xl"><img src="IMG_20260617_204442.jpg" class="w-full rounded-2xl"></div>
+</div>
+</section>
+
+<section class="max-w-7xl mx-auto px-6 py-20">
+<div class="glass p-10 rounded-[3rem]">
+<h2 class="text-4xl font-bold mb-6">Trải nghiệm Pop-up 3D</h2>
+<p class="text-slate-400 text-lg">
+Khi mở thiệp, các lớp giấy sẽ tự động dựng lên tạo thành một mô hình không gian ba chiều,
+mang đến cảm giác bất ngờ và trực quan. Đây là điểm khác biệt giúp sản phẩm trở nên nổi bật
+so với các loại thiệp truyền thống.
+</p>
+</div>
+</section>
+
+<section class="max-w-7xl mx-auto px-6 py-20 text-center">
+<div class="glass p-12 rounded-[3rem]">
+<h2 class="text-4xl font-bold mb-6">Mang một phần Hà Nội về cùng bạn</h2>
+<p class="text-slate-400 mb-8 max-w-2xl mx-auto">
+Khám phá những thiết kế thiệp pop-up lấy cảm hứng từ vẻ đẹp của Thủ đô. Mỗi sản phẩm là một câu chuyện nhỏ được kể bằng giấy, mang theo những dấu ấn văn hóa và ký ức về Hà Nội.
+</p>
+<a href="https://www.facebook.com/profile.php?id=61590773513041&locale=vi_VN"
+target="_blank"
+class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-10 py-4 rounded-2xl font-bold">
+Chat với chúng tôi
+</a>
+</div>
+</section>
+
+<!-- Footer -->
+
+    <footer class="border-t border-white/5 py-12 px-6 mt-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 opacity-70 text-sm">
+            <div>
+                <div style="font-weight:500; letter-spacing:2px; font-size:1.5rem; text-transform:uppercase;"><span style="color:white;">BUZZ</span><span style="color:#3B82F6;">ERS</span></div>
+                <p>Nền tảng mua sắm tri thức hàng đầu trong kỷ nguyên số 2026.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase">Liên kết</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="#" class="hover:text-blue-400">Trang chủ</a>
+                    <a href="#" class="hover:text-blue-400">Chính sách</a>
+                    <a href="#" class="hover:text-blue-400">Sách mới</a>
+                    <a href="#" class="hover:text-blue-400">Liên hệ</a>
+                </div>
+            </div>
+            <div>
+                
+               <h4 class="text-white font-bold mb-4 uppercase">Theo dõi chúng tôi</h4>
+
+<div class="flex space-x-4">
+
+    <a href="https://www.facebook.com/profile.php?id=61590773513041&locale=vi_VN" target="_blank">
+        <div class="w-10 h-10 rounded-xl glass flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors">
+            FB
+        </div>
+    </a>
+
+    <a href="https://instagram.com/tenacc" target="_blank">
+        <div class="w-10 h-10 rounded-xl glass flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors">
+            IG
+        </div>
+    </a>
+
+    <a href="https://tiktok.com/@tenacc" target="_blank">
+        <div class="w-10 h-10 rounded-xl glass flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors">
+            TT
+        </div>
+    </a>
+
+</div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/5 text-center text-xs opacity-40">
+            © 2026 BUZZERS Store. Toàn bộ bản quyền được bảo lưu.
+        </div>
+    </footer>
+
+
+<!-- CART POPUP -->
+<div id="cartModal"
+     class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+
+    <div class="glass p-8 rounded-3xl w-[90%] max-w-xl">
+
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Giỏ hàng</h2>
+
+            <button onclick="closeCart()">✕</button>
+        </div>
+
+        <div id="cartItems" class="space-y-4 mb-6"></div>
+
+        <div class="flex justify-between text-xl font-bold mb-6">
+            <span>Tổng tiền:</span>
+            <span id="totalPrice">0đ</span>
+        </div>
+
+        <button onclick="showQR()"
+            class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-bold">
+            Thanh toán
+        </button>
+
+        <div id="qrSection" style="display:none;" class="text-center mt-8">
+            <img 
+                src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=ThanhToanBuzzers"
+                class="mx-auto rounded-2xl mb-4"
+            >
+
+            <p>Ngân hàng: MB BANK</p>
+            <p>STK: 123456789</p>
+
+            <div class="mt-4 glass p-4 rounded-2xl">
+                <p class="text-sm text-slate-400 mb-2">
+                    Nội dung chuyển khoản:
+                </p>
+
+                <p id="paymentNote"
+                   class="font-bold text-blue-400 break-words">
+                   THANHTOANBUZZERS
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let cart = [];
+
+const productImages = {
+    "Hà Nội: Dấu Ấn Ngàn Năm": "hanoi_product_cover.jpg",
+    "Thiết Kế Cuộc Đời": "https://placehold.co/600x800?text=UPCOMING",
+    "Vũ Trụ Song Song": "https://placehold.co/600x800?text=UPCOMING",
+    "Startup 4.0": "https://placehold.co/600x800?text=UPCOMING"
+};
+
+function addToCart(name, price) {
+
+    const existingItem = cart.find(item => item.name === name);
+
+    if(existingItem) {
+
+        existingItem.quantity += 1;
+
+    } else {
+
+        cart.push({
+            name,
+            price,
+            quantity: 1,
+            image: productImages[name]
+        });
+
+    }
+
+    updateCart();
+
+}
+
+function changeQuantity(index, amount) {
+
+    cart[index].quantity += amount;
+
+    if(cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+    }
+
+    updateCart();
+
+}
+
+function updateCart() {
+
+    document.getElementById("cartCount").innerText =
+        cart.reduce((sum, item) => sum + item.quantity, 0);
+
+    const cartItems = document.getElementById("cartItems");
+
+    cartItems.innerHTML = "";
+
+    let total = 0;
+
+    cart.forEach((item, index) => {
+
+        total += item.price * item.quantity;
+
+        cartItems.innerHTML += `
+            <div class="glass p-4 rounded-2xl flex items-center justify-between gap-4 overflow-hidden">
+
+                <div class="flex items-center gap-4">
+
+                    <img 
+                        src="${item.image}"
+                        class="w-20 h-24 object-cover rounded-xl"
+                    >
+
+                    <div>
+                        <h3 class="font-bold">${item.name}</h3>
+                        <p class="text-slate-400 text-sm">
+                            ${item.price.toLocaleString()}đ
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="flex items-center gap-2 shrink-0">
+
+                    <button 
+                        onclick="changeQuantity(${index}, -1)"
+                        class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-red-500 transition">
+                        -
+                    </button>
+
+                    <span class="font-bold text-lg min-w-[24px] text-center">
+                        ${item.quantity}
+                    </span>
+
+                    <button 
+                        onclick="changeQuantity(${index}, 1)"
+                        class="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-green-500 transition">
+                        +
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+    });
+
+    document.getElementById("totalPrice").innerText =
+        total.toLocaleString() + "đ";
+
+    updatePaymentNote();
+
+}
+
+
+
+function updatePaymentNote() {
+
+    const paymentText = cart.map(item => {
+        return `${item.quantity}x ${item.name}`;
+    }).join(" | ");
+
+    document.getElementById("paymentNote").innerText =
+        paymentText || "THANHTOANBUZZERS";
+
+}
+
+
+function openCart() {
+
+    document.getElementById("cartModal").classList.remove("hidden");
+
+}
+
+function closeCart() {
+
+    document.getElementById("cartModal").classList.add("hidden");
+
+    // reset QR section khi đóng cart
+    document.getElementById("qrSection").style.display = "none";
+
+}
+
+function showQR() {
+
+    updatePaymentNote();
+
+    document.getElementById("qrSection").style.display = "block";
+
+}
+
+
+
+// CLOSE WHEN CLICK OUTSIDE
+window.addEventListener("click", function(e) {
+
+    const modal = document.getElementById("cartModal");
+    const modalContent = modal.querySelector(".glass");
+
+    // chỉ đóng khi click đúng vùng overlay ngoài box
+    if (
+        !modal.classList.contains("hidden") &&
+        e.target === modal
+    ) {
+        closeCart();
+    }
+
+});
+
+/* SEARCH FUNCTION */
+
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function() {
+
+    const keyword = searchInput.value.toLowerCase();
+
+    const products = document.querySelectorAll(".product");
+
+    products.forEach(product => {
+
+        const name = product.dataset.name.toLowerCase();
+
+        if(name.includes(keyword)) {
+
+            product.style.display = "flex";
+
+        } else {
+
+            product.style.display = "none";
+
+        }
+
+    });
+
+});
+
+
+
+
+
+
+
+
+// AI FINDER
+
+function openAIFinder() {
+
+    document.getElementById("aiModal").style.display = "flex";
+
+}
+
+function closeAIFinder() {
+
+    document.getElementById("aiModal").style.display = "none";
+
+}
+
+function searchBooks() {
+
+    const keyword = document
+        .getElementById("aiInput")
+        .value
+        .toLowerCase();
+
+    const results = document.getElementById("aiResults");
+
+    results.innerHTML = "";
+
+    let recommendations = [];
+
+    if(keyword.includes("khoa học") || keyword.includes("vũ trụ")) {
+
+        recommendations.push({
+            title: "UPCOMING",
+            desc: "Phù hợp nếu bạn thích khoa học và khám phá."
+        });
+
+    }
+
+    if(keyword.includes("startup") || keyword.includes("kinh doanh")) {
+
+        recommendations.push({
+            title: "Startup 4.0",
+            desc: "Dành cho người muốn học kinh doanh hiện đại."
+        });
+
+    }
+
+    if(keyword.includes("ai") || keyword.includes("công nghệ")) {
+
+        recommendations.push({
+            title: "Hà Nội: Dấu Ấn Ngàn Năm",
+            desc: "Khám phá tương lai AI và công nghệ."
+        });
+
+    }
+
+    if(keyword.includes("tư duy") || keyword.includes("chữa lành")) {
+
+        recommendations.push({
+            title: "UPCOMING",
+            desc: "Một cuốn sách nhẹ nhàng về tư duy sống."
+        });
+
+    }
+
+    if(recommendations.length === 0) {
+
+        recommendations.push({
+            title: "Hà Nội: Dấu Ấn Ngàn Năm",
+            desc: "Đề xuất phổ biến cho người mới bắt đầu."
+        });
+
+    }
+
+    recommendations.forEach(book => {
+
+        results.innerHTML += `
+            <div class="glass p-6 rounded-3xl">
+
+                <h3 class="text-xl font-bold mb-3">
+                    ${book.title}
+                </h3>
+
+                <p class="text-slate-400">
+                    ${book.desc}
+                </p>
+
+            </div>
+        `;
+
+    });
+
+}
+
+
+</script>
+
+
+
+
+
+<!-- AI FINDER POPUP -->
+<div id="aiModal"
+     style="display:none;"
+     class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+
+    <div class="glass p-8 rounded-3xl w-[90%] max-w-4xl">
+
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold">AI Finder</h2>
+
+            <button onclick="closeAIFinder()" class="text-xl">
+                ✕
+            </button>
+        </div>
+
+        <div class="flex gap-4 mb-8">
+
+            <input 
+                type="text"
+                id="aiInput"
+                placeholder="Mô tả sách bạn muốn tìm..."
+                class="flex-1 bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-blue-500"
+            >
+
+            <button 
+                onclick="searchBooks(); return false;"
+                class="bg-blue-600 hover:bg-blue-500 px-8 rounded-2xl font-bold">
+                Tìm kiếm
+            </button>
+
+        </div>
+
+        <div id="aiResults"
+             class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="comingSoonModal" style="display:none;"
+class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+  <div class="glass p-8 rounded-3xl max-w-md text-center">
+    <h2 class="text-2xl font-bold mb-4">📚 Sách đang được cập nhật</h2>
+    <p class="text-slate-400 mb-6">
+      Mẫu thiệp này hiện vẫn đang trong quá trình hoàn thiện và sẽ sớm ra mắt.
+      Vui lòng quay lại trong thời gian tới.
+    </p>
+    <button onclick="closeComingSoon()"
+      class="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-xl font-bold">
+      Đã hiểu
+    </button>
+  </div>
+</div>
+
+
+<script>
+function showComingSoon(){
+ document.getElementById('comingSoonModal').style.display='flex';
+}
+function closeComingSoon(){
+ document.getElementById('comingSoonModal').style.display='none';
+}
+</script>
+
+
+
+<div id="hanoiModal" style="display:none;"
+class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+  <div class="glass p-8 rounded-3xl w-[90%] max-w-4xl max-h-[90vh] overflow-auto">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-3xl font-bold">Hà Nội: Dấu Ấn Ngàn Năm</h2>
+      <button onclick="closeHanoiModal()">✕</button>
+    </div>
+
+    <img src="https://vj-prod-website-cms.s3.ap-southeast-1.amazonaws.com/shutterstock1391898416-1646649508378.png" style="width:100%;border-radius:16px;margin-bottom:20px;">
+
+    <p>
+      Hà Nội là thủ đô của Việt Nam, nổi tiếng với bề dày lịch sử, văn hóa và kiến trúc đặc sắc.
+      Thành phố là nơi giao thoa giữa nét cổ kính của khu phố cổ, các công trình mang dấu ấn lịch sử
+      cùng nhịp sống hiện đại đang phát triển từng ngày. Hồ Gươm, Văn Miếu - Quốc Tử Giám, Lăng Chủ tịch
+      Hồ Chí Minh và nhiều địa danh khác đã góp phần tạo nên bản sắc riêng cho Hà Nội.
+    </p>
+  </div>
+</div>
+
+<script>
+function openHanoiModal(){
+ document.getElementById('hanoiModal').style.display='flex';
+}
+function closeHanoiModal(){
+ document.getElementById('hanoiModal').style.display='none';
+}
+</script>
+
+
+
+<script>
+window.addEventListener('click', function(e){
+    const modal = document.getElementById('hanoiModal');
+    if(modal && modal.style.display === 'flex' && e.target === modal){
+        closeHanoiModal();
+    }
+});
+</script>
+
+</body>
+</html>
